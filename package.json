@@ -1,0 +1,22 @@
+{
+  "name": "gravity-dlc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/jquery": "^4.0.1",
+    "@types/matter-js": "^0.20.2",
+    "esbuild": "^0.28.1"
+  },
+  "dependencies": {
+    "jquery": "^4.0.0",
+    "matter-js": "^0.20.0"
+  }
+}

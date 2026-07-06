@@ -1,0 +1,1 @@
+npx esbuild src/script.ts     --bundle     --format=iife     --outfile=dist/script.js
