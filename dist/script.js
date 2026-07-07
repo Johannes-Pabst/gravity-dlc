@@ -10776,184 +10776,192 @@
     "src/script.ts"() {
       init_jquery_module();
       var import_matter_js = __toESM(require_matter());
-      console.log("uhgz");
-      var Engine = import_matter_js.default.Engine;
-      var Runner = import_matter_js.default.Runner;
-      var Bodies = import_matter_js.default.Bodies;
-      var Composite = import_matter_js.default.Composite;
-      var engine = Engine.create();
-      var pelements = [];
-      function hasDirectText(el) {
-        return Array.from(el.childNodes).some(
-          (node) => node.nodeType === Node.TEXT_NODE && node.textContent?.trim()
-        );
-      }
-      function visible(e) {
-        if ((e.css("background-color") != "rgba(0, 0, 0, 0)" || e.css("background-image") != "" && e.css("background-image") != "none" || hasDirectText(e[0]) || e[0] instanceof HTMLImageElement || e[0] instanceof SVGElement) && e[0].checkVisibility() && e.css("visibility") != "hidden") {
-          if (hasDirectText(e[0])) {
-            console.log(e.text(), e[0]);
+      if (window.gravity_dlc_already_active) {
+        console.log("can't activate gravity dlc twice!");
+      } else {
+        let hasDirectText = function(el) {
+          return Array.from(el.childNodes).some(
+            (node) => node.nodeType === Node.TEXT_NODE && node.textContent?.trim()
+          );
+        }, visible = function(e) {
+          if ((e.css("background-color") != "rgba(0, 0, 0, 0)" && e.css("background-color") != "" || e.css("background-image") != "" && e.css("background-image") != "none" || hasDirectText(e[0]) || e[0] instanceof HTMLImageElement || e[0] instanceof SVGElement) && e[0].checkVisibility() && e.css("visibility") != "hidden") {
+            if (hasDirectText(e[0])) {
+              console.log(e.text(), e[0]);
+            }
+            return 1;
           }
-          return 1;
-        }
-        for (let i = 0; i < e.children().length; i++) {
-          const e2 = e.children()[i];
-          if (visible(jquery_module_default(e2))) {
-            return 2;
+          for (let i = 0; i < e.children().length; i++) {
+            const e2 = e.children()[i];
+            if (visible(jquery_module_default(e2))) {
+              return 2;
+            }
           }
-        }
-        return 0;
-      }
-      function walk($e) {
-        let v = visible($e);
-        if (v == 0) {
-          return;
-        }
-        let e = { $: $e };
-        e.w = e.$.outerWidth(false);
-        e.h = e.$.outerHeight(false);
-        e.ax = pos(e.$).left;
-        e.ay = pos(e.$).top;
-        if ((hasDirectText($e[0]) || $e.css("border-radius") != "0px" || $e[0] instanceof SVGElement || $e[0] instanceof HTMLImageElement || $e.css("background-image") != "" && $e.css("background-image") != "none" && $e.css("width") != "") && e.w < window.innerWidth * 0.8 && e.h < window.innerHeight * 0.8 && e.ax < window.innerWidth && e.ay < innerHeight && e.ax + e.w > 0 && e.ay + e.h > 0) {
-          e.md = false;
-          e.ma = 0;
-          e.mb = 0;
-          pelements.push(e);
-        } else {
-          let children = $e.children();
-          for (let i = 0; i < children.length; i++) {
-            const e2 = children[i];
-            walk(jquery_module_default(e2));
+          return 0;
+        }, walk = function($e) {
+          let v = visible($e);
+          if (v == 0) {
+            return;
           }
-        }
-      }
-      walk(jquery_module_default(document.body));
-      console.log(pelements);
-      function pos(e) {
-        let h = e.offsetParent();
-        let h3 = e.position();
-        let h4 = { left: parseFloat(e.css("margin-left")), top: parseFloat(e.css("margin-top")) };
-        if (h3 == void 0) {
-          return { left: 0, top: 0 };
-        }
-        if (!(h.get(0) instanceof HTMLHtmlElement) && h.length !== 0) {
-          let h2 = pos(h);
-          return { left: h2.left + h3.left + h4.left, top: h2.top + h3.top + h4.top };
-        } else {
-          return { left: h3.left + h4.left, top: h3.top + h4.top };
-        }
-      }
-      var mm = false;
-      for (let i = 0; i < pelements.length; i++) {
-        let e = pelements[i];
-        moveElementWithStyles(e.$.get(0), document.body);
-        e.$.css("position", "absolute");
-        e.$.css("left", e.ax + "px");
-        e.$.css("top", e.ay + "px");
-        if (e.ax == void 0 || e.ay == void 0 || e.w == void 0 || e.h == void 0) continue;
-        e.box = Bodies.rectangle(e.ax + e.w / 2, e.ay + e.h / 2, e.w, e.h);
-        import_matter_js.Body.applyForce(e.box, e.box.position, { x: (Math.random() * 2 - 1) * e.box.mass / 20, y: (Math.random() * 2 - 1) * e.box.mass / 20 });
-        Composite.add(engine.world, [e.box]);
-        e.$.on("mousedown", () => {
-          e.md = true;
-          if (e.box == void 0 || e.w == void 0 || e.h == void 0) return;
-          let h = lcomb(Math.cos(e.box.angle), Math.sin(e.box.angle), -Math.sin(e.box.angle), Math.cos(e.box.angle), mx - e.box.position.x, my - e.box.position.y);
-          e.ma = h.a;
-          e.mb = h.b;
-        });
-        e.$.on("click", (event) => {
-          if (mm) {
-            event.preventDefault();
+          let e = { $: $e };
+          e.w = e.$.outerWidth(false);
+          e.h = e.$.outerHeight(false);
+          e.ax = pos(e.$).left;
+          e.ay = pos(e.$).top;
+          if ((hasDirectText($e[0]) || $e.css("border-radius") != "0px" && $e.css("border-radius") != "" && v == 1 || $e[0] instanceof SVGElement || $e[0] instanceof HTMLImageElement || $e.css("background-image") != "" && $e.css("background-image") != "none" && $e.css("width") != "") && e.w < window.innerWidth * 0.8 && e.h < window.innerHeight * 0.8 && e.ax < window.innerWidth && e.ay < innerHeight && e.ax + e.w > 0 && e.ay + e.h > 0) {
+            e.md = false;
+            e.ma = 0;
+            e.mb = 0;
+            pelements.push(e);
+          } else {
+            let children = $e.children();
+            for (let i = 0; i < children.length; i++) {
+              const e2 = children[i];
+              walk(jquery_module_default(e2));
+            }
           }
-        });
-        jquery_module_default(document).on("mouseup", () => {
-          e.md = false;
-          if (e.box == void 0) return;
-        });
-      }
-      var mx = 0;
-      var my = 0;
-      jquery_module_default(document).on("click", () => {
-        mm = false;
-      });
-      jquery_module_default(document).on("mousedown", () => {
-        mm = false;
-      });
-      jquery_module_default(document).on("mousemove", (event) => {
-        mx = event.clientX;
-        my = event.clientY;
-        mm = true;
-      });
-      Composite.add(engine.world, [
-        Bodies.rectangle(window.innerWidth / 2, window.innerHeight + 30, window.innerWidth, 60, { isStatic: true }),
-        Bodies.rectangle(window.innerWidth / 2, -30, window.innerWidth, 60, { isStatic: true }),
-        Bodies.rectangle(-30, window.innerHeight / 2, 60, window.innerHeight, { isStatic: true }),
-        Bodies.rectangle(window.innerWidth + 30, window.innerHeight / 2, 60, window.innerHeight, { isStatic: true })
-      ]);
-      var runner = Runner.create();
-      var frame = (t) => {
-        Runner.tick(runner, engine, t);
+        }, pos = function(e, inner = false) {
+          let h = e.offsetParent();
+          let h3 = e.position();
+          let h4;
+          if (inner) {
+            h4 = { left: parseFloat(e.css("margin-left")), top: parseFloat(e.css("margin-top")) };
+          } else {
+            h4 = { left: 0, top: 0 };
+          }
+          if (h3 == void 0) {
+            return { left: 0, top: 0 };
+          }
+          if (!(h.get(0) instanceof HTMLHtmlElement) && h.length !== 0) {
+            let h2 = pos(h, true);
+            return { left: h2.left + h3.left + h4.left, top: h2.top + h3.top + h4.top };
+          } else {
+            return { left: h3.left + h4.left, top: h3.top + h4.top };
+          }
+        }, getComputedStyles = function(element) {
+          const computedStyles = window.getComputedStyle(element);
+          const inlineStyles = {};
+          for (let i = 0; i < computedStyles.length; i++) {
+            const key = computedStyles[i];
+            inlineStyles[key] = computedStyles.getPropertyValue(key);
+          }
+          return inlineStyles;
+        }, applyInlineStyles = function(element, styles) {
+          for (const key in styles) {
+            if (styles.hasOwnProperty(key)) {
+              element.style[key] = styles[key];
+            }
+          }
+        }, moveElementWithStyles = function(element, newParentSelector) {
+          if (!element) {
+            return;
+          }
+          const computedStyles = getComputedStyles(element);
+          const $element = jquery_module_default(element).detach();
+          applyInlineStyles(element, computedStyles);
+          jquery_module_default(newParentSelector).append($element);
+        }, lcomb = function(x1, y1, x2, y2, x3, y3) {
+          return { a: (x3 * y2 - x2 * y3) / (x1 * y2 - x2 * y1), b: (x3 * y1 - x1 * y3) / (x2 * y1 - x1 * y2) };
+        };
+        window.gravity_dlc_already_active = true;
+        console.log("inserting gravity dlc...");
+        Engine = import_matter_js.default.Engine, Runner = import_matter_js.default.Runner, Bodies = import_matter_js.default.Bodies, Composite = import_matter_js.default.Composite;
+        engine = Engine.create();
+        let pelements = [];
+        walk(jquery_module_default(document.body));
+        console.log(pelements);
+        let mm = false;
         for (let i = 0; i < pelements.length; i++) {
-          const e = pelements[i];
-          if (e.md) {
-            if (e.box == void 0 || e.ma == void 0 || e.mb == void 0) return;
-            let v = { x: e.box.position.x + e.ma * Math.cos(e.box.angle) + e.mb * -Math.sin(e.box.angle), y: e.box.position.y + e.ma * Math.sin(e.box.angle) + e.mb * Math.cos(e.box.angle) };
-            let dx = mx - v.x;
-            let dy = my - v.y;
-            let vm = { x: (-e.box.velocity.x - e.box.angularVelocity * (e.box.position.x - v.x)) / 5e3 * e.box.mass, y: (-e.box.velocity.y + e.box.angularVelocity * (e.box.position.y - v.y)) / 5e3 * e.box.mass };
-            import_matter_js.Body.applyForce(e.box, v, { x: dx * e.box.mass / 1e4, y: dy * e.box.mass / 1e4 });
-            import_matter_js.Body.applyForce(e.box, v, vm);
+          let e = pelements[i];
+          moveElementWithStyles(e.$.get(0), document.body);
+          e.$.css("position", "absolute");
+          e.$.css("object-position", "0% 0%");
+          e.$.css("perceptive-origin", "0px 0px");
+          e.$.css("transform", "translate(" + e.ax + "px, " + e.ay + "px)");
+          e.$.css("left", "0px");
+          e.$.css("top", "0px");
+          e.$.css("transition", "transform 0s");
+          if (e.ax == void 0 || e.ay == void 0 || e.w == void 0 || e.h == void 0) continue;
+          e.box = Bodies.rectangle(e.ax + e.w / 2, e.ay + e.h / 2, e.w, e.h);
+          import_matter_js.Body.applyForce(e.box, e.box.position, { x: (Math.random() * 2 - 1) * e.box.mass / 20, y: (Math.random() * 2 - 1) * e.box.mass / 20 });
+          Composite.add(engine.world, [e.box]);
+          e.$.on("mousedown", () => {
+            e.md = true;
+            if (e.box == void 0 || e.w == void 0 || e.h == void 0) return;
+            let h = lcomb(Math.cos(e.box.angle), Math.sin(e.box.angle), -Math.sin(e.box.angle), Math.cos(e.box.angle), mx - e.box.position.x, my - e.box.position.y);
+            e.ma = h.a;
+            e.mb = h.b;
+          });
+          e.$.on("click", (event) => {
+            if (mm) {
+              event.preventDefault();
+            }
+          });
+          jquery_module_default(document).on("mouseup", () => {
+            e.md = false;
+            if (e.box == void 0) return;
+          });
+        }
+        let mx = 0;
+        let my = 0;
+        jquery_module_default(document).on("click", () => {
+          mm = false;
+        });
+        jquery_module_default(document).on("mousedown", () => {
+          mm = false;
+        });
+        jquery_module_default(document).on("mousemove", (event) => {
+          mx = event.clientX;
+          my = event.clientY;
+          mm = true;
+        });
+        Composite.add(engine.world, [
+          Bodies.rectangle(window.innerWidth / 2, window.innerHeight + 30, window.innerWidth, 60, { isStatic: true }),
+          Bodies.rectangle(window.innerWidth / 2, -30, window.innerWidth, 60, { isStatic: true }),
+          Bodies.rectangle(-30, window.innerHeight / 2, 60, window.innerHeight, { isStatic: true }),
+          Bodies.rectangle(window.innerWidth + 30, window.innerHeight / 2, 60, window.innerHeight, { isStatic: true })
+        ]);
+        runner = Runner.create();
+        let frame = (t) => {
+          Runner.tick(runner, engine, t);
+          for (let i = 0; i < pelements.length; i++) {
+            const e = pelements[i];
+            if (e.md) {
+              if (e.box == void 0 || e.ma == void 0 || e.mb == void 0) return;
+              let v = { x: e.box.position.x + e.ma * Math.cos(e.box.angle) + e.mb * -Math.sin(e.box.angle), y: e.box.position.y + e.ma * Math.sin(e.box.angle) + e.mb * Math.cos(e.box.angle) };
+              let dx = mx - v.x;
+              let dy = my - v.y;
+              let vm = { x: (-e.box.velocity.x - e.box.angularVelocity * (e.box.position.x - v.x)) / 5e3 * e.box.mass, y: (-e.box.velocity.y + e.box.angularVelocity * (e.box.position.y - v.y)) / 5e3 * e.box.mass };
+              import_matter_js.Body.applyForce(e.box, v, { x: dx * e.box.mass / 1e4, y: dy * e.box.mass / 1e4 });
+              import_matter_js.Body.applyForce(e.box, v, vm);
+            }
           }
-        }
-        for (let i = 0; i < pelements.length; i++) {
-          const e = pelements[i];
-          if (e.w == void 0 || e.h == void 0 || e.box == void 0) continue;
-          e.$.css("left", e.box.position.x - e.w / 2 + "px");
-          e.$.css("top", e.box.position.y - e.h / 2 + "px");
-          e.$.css("transform", "rotate(" + e.box.angle / Math.PI * 180 + "deg)");
-        }
-        requestAnimationFrame(frame);
-      };
-      var b = true;
-      jquery_module_default(document).on("mousemove", () => {
-        if (b) {
-          b = false;
-          frame(0);
-        }
-      });
-      function getComputedStyles(element) {
-        const computedStyles = window.getComputedStyle(element);
-        const inlineStyles = {};
-        for (let i = 0; i < computedStyles.length; i++) {
-          const key = computedStyles[i];
-          inlineStyles[key] = computedStyles.getPropertyValue(key);
-        }
-        return inlineStyles;
-      }
-      function applyInlineStyles(element, styles) {
-        for (const key in styles) {
-          if (styles.hasOwnProperty(key)) {
-            element.style[key] = styles[key];
+          for (let i = 0; i < pelements.length; i++) {
+            const e = pelements[i];
+            if (e.w == void 0 || e.h == void 0 || e.box == void 0) continue;
+            e.$.css("transform", "translate(" + (e.box.position.x - e.w / 2) + "px, " + (e.box.position.y - e.h / 2) + "px) rotate(" + e.box.angle / Math.PI * 180 + "deg)");
           }
-        }
+          requestAnimationFrame(frame);
+        };
+        let b = true;
+        jquery_module_default(document).on("mousemove", () => {
+          if (b) {
+            b = false;
+            frame(0);
+          }
+        });
+        jquery_module_default(document.head).append(`<style>*{
+    -webkit-user-drag: none !important; /* For WebKit browsers */
+    user-drag: none; /* For other browsers that support this */
+    overflow: hidden;
+    user-select: none;
+  }</style>`);
       }
-      function moveElementWithStyles(element, newParentSelector) {
-        if (!element) {
-          return;
-        }
-        const computedStyles = getComputedStyles(element);
-        const $element = jquery_module_default(element).detach();
-        applyInlineStyles(element, computedStyles);
-        jquery_module_default(newParentSelector).append($element);
-      }
-      function lcomb(x1, y1, x2, y2, x3, y3) {
-        return { a: (x3 * y2 - x2 * y3) / (x1 * y2 - x2 * y1), b: (x3 * y1 - x1 * y3) / (x2 * y1 - x1 * y2) };
-      }
-      jquery_module_default(document.head).append(`<style>*{
-  -webkit-user-drag: none !important; /* For WebKit browsers */
-  user-drag: none; /* For other browsers that support this */
-  overflow: hidden;
-  user-select: none;
-}</style>`);
+      var Engine;
+      var Runner;
+      var Bodies;
+      var Composite;
+      var engine;
+      var runner;
     }
   });
   require_script();
