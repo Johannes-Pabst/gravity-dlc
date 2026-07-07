@@ -10789,7 +10789,10 @@
         );
       }
       function visible(e) {
-        if ((e.css("background-color") != "rgba(0, 0, 0, 0)" || e.css("background-image") != "" || hasDirectText(e[0]) || e[0] instanceof HTMLImageElement || e[0] instanceof SVGElement) && e[0].checkVisibility()) {
+        if ((e.css("background-color") != "rgba(0, 0, 0, 0)" || e.css("background-image") != "" && e.css("background-image") != "none" || hasDirectText(e[0]) || e[0] instanceof HTMLImageElement || e[0] instanceof SVGElement) && e[0].checkVisibility() && e.css("visibility") != "hidden") {
+          if (hasDirectText(e[0])) {
+            console.log(e.text(), e[0]);
+          }
           return 1;
         }
         for (let i = 0; i < e.children().length; i++) {
@@ -10811,7 +10814,6 @@
         e.ax = pos(e.$).left;
         e.ay = pos(e.$).top;
         if ((hasDirectText($e[0]) || $e.css("border-radius") != "0px" || $e[0] instanceof SVGElement || $e[0] instanceof HTMLImageElement || $e.css("background-image") != "" && $e.css("background-image") != "none" && $e.css("width") != "") && e.w < window.innerWidth * 0.8 && e.h < window.innerHeight * 0.8 && e.ax < window.innerWidth && e.ay < innerHeight && e.ax + e.w > 0 && e.ay + e.h > 0) {
-          e.$.css("margin", "0");
           e.md = false;
           e.ma = 0;
           e.mb = 0;
@@ -10863,20 +10865,20 @@
             event.preventDefault();
           }
         });
-        jquery_module_default(document.body).on("mouseup", () => {
+        jquery_module_default(document).on("mouseup", () => {
           e.md = false;
           if (e.box == void 0) return;
         });
       }
       var mx = 0;
       var my = 0;
-      jquery_module_default(document.body).on("click", () => {
+      jquery_module_default(document).on("click", () => {
         mm = false;
       });
-      jquery_module_default(document.body).on("mousedown", () => {
+      jquery_module_default(document).on("mousedown", () => {
         mm = false;
       });
-      jquery_module_default(document.body).on("mousemove", (event) => {
+      jquery_module_default(document).on("mousemove", (event) => {
         mx = event.clientX;
         my = event.clientY;
         mm = true;
@@ -10912,7 +10914,7 @@
         requestAnimationFrame(frame);
       };
       var b = true;
-      jquery_module_default(document.body).on("mousemove", () => {
+      jquery_module_default(document).on("mousemove", () => {
         if (b) {
           b = false;
           frame(0);

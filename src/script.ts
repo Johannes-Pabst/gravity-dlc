@@ -26,24 +26,6 @@ type NewType = {
   mb?: number;
 };
 
-// create a renderer
-// var render = Render.create({
-//     element: document.body,
-//     engine: engine,
-//     bounds:{
-//       max:{
-//         x:window.innerWidth+100,
-//         y:window.innerHeight+100,
-//       },
-//       min:{
-//         x:-100,
-//         y:-100,
-//       },
-//     }
-// });
-
-// create two boxes and a ground
-
 let pelements: NewType[] = [];
 
 function hasDirectText(el:HTMLElement) {
@@ -54,7 +36,10 @@ function hasDirectText(el:HTMLElement) {
 }
 
 function visible(e:JQuery<HTMLElement>):number{
-  if((e.css("background-color")!="rgba(0, 0, 0, 0)"||e.css("background-image")!=""||hasDirectText(e[0])||e[0] instanceof HTMLImageElement||e[0] instanceof SVGElement)&&e[0].checkVisibility()){
+  if((e.css("background-color")!="rgba(0, 0, 0, 0)"||(e.css("background-image")!=""&&e.css("background-image")!="none")||hasDirectText(e[0])||e[0] instanceof HTMLImageElement||e[0] instanceof SVGElement)&&e[0].checkVisibility()&&e.css("visibility")!="hidden"){
+    if(hasDirectText(e[0])){
+      console.log(e.text(), e[0])
+    }
     return 1;
   }
   for (let i = 0; i < e.children().length; i++) {
@@ -77,7 +62,6 @@ function walk($e:JQuery<HTMLElement>){
   e.ax = pos(e.$).left;
   e.ay = pos(e.$).top;
   if((hasDirectText($e[0])||$e.css("border-radius")!="0px"||$e[0] instanceof SVGElement||$e[0] instanceof HTMLImageElement||($e.css("background-image")!=""&&$e.css("background-image")!="none"&&$e.css("width")!=""))&&e.w<window.innerWidth*0.8&&e.h<window.innerHeight*0.8&&e.ax<window.innerWidth&&e.ay<innerHeight&&e.ax+e.w>0&&e.ay+e.h>0){
-    e.$.css("margin", "0");
     e.md = false;
     e.ma = 0;
     e.mb = 0;
@@ -109,6 +93,7 @@ function pos(e: JQuery<HTMLElement>): { left: number, top: number } {
 let mm = false;
 for (let i = 0; i < pelements.length; i++) {
   let e = pelements[i];
+  // e.$.css("margin", "0");
   moveElementWithStyles(<HTMLElement>e.$.get(0), document.body);
   e.$.css("position", "absolute");
   e.$.css("left", e.ax + "px");
@@ -134,7 +119,7 @@ for (let i = 0; i < pelements.length; i++) {
       event.preventDefault();
     }
   })
-  $(document.body).on("mouseup", () => {
+  $(document).on("mouseup", () => {
     // if (e.md && !mm) {
     //   e.$.get(0)?.click();
     // }
@@ -146,13 +131,13 @@ for (let i = 0; i < pelements.length; i++) {
 
 let mx = 0;
 let my = 0;
-$(document.body).on("click", () => {
+$(document).on("click", () => {
   mm = false;
 })
-$(document.body).on("mousedown", () => {
+$(document).on("mousedown", () => {
   mm = false;
 })
-$(document.body).on("mousemove", (event) => {
+$(document).on("mousemove", (event) => {
   mx = event.clientX;
   my = event.clientY;
   mm = true;
@@ -197,7 +182,7 @@ let frame = (t: number) => {
   requestAnimationFrame(frame);
 }
 let b = true;
-$(document.body).on("mousemove", () => {
+$(document).on("mousemove", () => {
   if (b) {
     b = false;
     frame(0);
