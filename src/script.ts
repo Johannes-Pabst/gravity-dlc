@@ -1,19 +1,19 @@
 import $ from 'jquery';
 import Matter, { Body } from 'matter-js'
-if((<any>window).gravity_dlc_already_active){
+if ((<any>window).gravity_dlc_already_active) {
   console.log("can't activate gravity dlc twice!")
-}else{
-  (<any>window).gravity_dlc_already_active=true;
+} else {
+  (<any>window).gravity_dlc_already_active = true;
   console.log("inserting gravity dlc...");
   var Engine = Matter.Engine,
     // Render = Matter.Render,
     Runner = Matter.Runner,
     Bodies = Matter.Bodies,
     Composite = Matter.Composite;
-  
 
-    var engine = Engine.create();
-  
+
+  var engine = Engine.create();
+
   type NewType = {
     $: JQuery<HTMLElement>;
     ax?: number;
@@ -25,49 +25,49 @@ if((<any>window).gravity_dlc_already_active){
     ma?: number;
     mb?: number;
   };
-  
+
   let pelements: NewType[] = [];
-  
-  function hasDirectText(el:HTMLElement) {
+
+  function hasDirectText(el: HTMLElement) {
     return Array.from(el.childNodes).some(node =>
       node.nodeType === Node.TEXT_NODE &&
       node.textContent?.trim()
     );
   }
-  
-  function visible(e:JQuery<HTMLElement>):number{
-    if(((e.css("background-color")!="rgba(0, 0, 0, 0)"&&e.css("background-color")!="")||(e.css("background-image")!=""&&e.css("background-image")!="none")||hasDirectText(e[0])||e[0] instanceof HTMLImageElement||e[0] instanceof SVGElement)&&e[0].checkVisibility()&&e.css("visibility")!="hidden"){
-      if(hasDirectText(e[0])){
+
+  function visible(e: JQuery<HTMLElement>): number {
+    if (((e.css("background-color") != "rgba(0, 0, 0, 0)" && e.css("background-color") != "") || (e.css("background-image") != "" && e.css("background-image") != "none") || hasDirectText(e[0]) || e[0] instanceof HTMLImageElement || e[0] instanceof SVGElement) && e[0].checkVisibility() && e.css("visibility") != "hidden") {
+      if (hasDirectText(e[0])) {
         console.log(e.text(), e[0])
       }
       return 1;
     }
     for (let i = 0; i < e.children().length; i++) {
       const e2 = e.children()[i];
-      if(visible($(e2))){
+      if (visible($(e2))) {
         return 2;
       }
     }
     return 0;
   }
-  
-  function walk($e:JQuery<HTMLElement>){
-    let v=visible($e)
-    if(v==0){
+
+  function walk($e: JQuery<HTMLElement>) {
+    let v = visible($e)
+    if (v == 0) {
       return;
     }
-    let e:NewType = {$:$e};
+    let e: NewType = { $: $e };
     e.w = e.$.outerWidth(false)!;
     e.h = e.$.outerHeight(false)!;
     e.ax = pos(e.$).left;
     e.ay = pos(e.$).top;
-    if((hasDirectText($e[0])||($e.css("border-radius")!="0px"&&$e.css("border-radius")!=""&&v==1)||$e[0] instanceof SVGElement||$e[0] instanceof HTMLImageElement||($e.css("background-image")!=""&&$e.css("background-image")!="none"&&$e.css("width")!=""))&&e.w<window.innerWidth*0.8&&e.h<window.innerHeight*0.8&&e.ax<window.innerWidth&&e.ay<innerHeight&&e.ax+e.w>0&&e.ay+e.h>0){
+    if ((hasDirectText($e[0]) || ($e.css("border-radius") != "0px" && $e.css("border-radius") != "" && v == 1) || $e[0] instanceof SVGElement || $e[0] instanceof HTMLImageElement || ($e.css("background-image") != "" && $e.css("background-image") != "none" && $e.css("width") != "")) && e.w < window.innerWidth * 0.8 && e.h < window.innerHeight * 0.8 && e.ax < window.innerWidth && e.ay < innerHeight && e.ax + e.w > 0 && e.ay + e.h > 0) {
       e.md = false;
       e.ma = 0;
       e.mb = 0;
       pelements.push(e)
-    }else{
-      let children=$e.children();
+    } else {
+      let children = $e.children();
       for (let i = 0; i < children.length; i++) {
         const e = children[i];
         walk($(e))
@@ -76,20 +76,20 @@ if((<any>window).gravity_dlc_already_active){
   }
   walk($(document.body));
   console.log(pelements)
-  function pos(e: JQuery<HTMLElement>, inner:boolean=false): { left: number, top: number } {
+  function pos(e: JQuery<HTMLElement>, inner: boolean = false): { left: number, top: number } {
     let h = e.offsetParent();
     let h3 = e.position();
     let h4;
-    if(inner){
+    if (inner) {
       h4 = { left: parseFloat(e.css("margin-left")), top: parseFloat(e.css("margin-top")) };
-    }else{
+    } else {
       h4 = { left: 0, top: 0 };
     }
     if (h3 == undefined) {
       return { left: 0, top: 0 };
     }
     if ((!(h.get(0) instanceof HTMLHtmlElement)) && h.length !== 0) {
-      let h2 = pos(h,true);
+      let h2 = pos(h, true);
       return { left: h2.left + h3.left + h4.left, top: h2.top + h3.top + h4.top };
     } else {
       return { left: h3.left + h4.left, top: h3.top + h4.top };
@@ -103,7 +103,7 @@ if((<any>window).gravity_dlc_already_active){
     e.$.css("position", "absolute");
     e.$.css("object-position", "0% 0%");
     e.$.css("perceptive-origin", "0px 0px");
-    e.$.css("transform", "translate("+e.ax+"px, "+e.ay+"px)");
+    e.$.css("transform", "translate(" + e.ax + "px, " + e.ay + "px)");
     e.$.css("left", "0px");
     e.$.css("top", "0px");
     e.$.css("transition", "transform 0s");
@@ -137,7 +137,7 @@ if((<any>window).gravity_dlc_already_active){
       // e.box.frictionAir=0;
     })
   }
-  
+
   let mx = 0;
   let my = 0;
   $(document).on("click", () => {
@@ -158,9 +158,9 @@ if((<any>window).gravity_dlc_already_active){
     Bodies.rectangle(-30, window.innerHeight / 2, 60, window.innerHeight, { isStatic: true }),
     Bodies.rectangle(window.innerWidth + 30, window.innerHeight / 2, 60, window.innerHeight, { isStatic: true }),
   ]);
-  
+
   var runner = Runner.create();
-  
+
   let frame = (t: number) => {
     Runner.tick(runner, engine, t);
     for (let i = 0; i < pelements.length; i++) {
@@ -181,7 +181,7 @@ if((<any>window).gravity_dlc_already_active){
       if (e.w == undefined || e.h == undefined || e.box == undefined) continue;
       // e.$.css("left", (e.box.position.x - e.w / 2) + "px");
       // e.$.css("top", (e.box.position.y - e.h / 2) + "px");
-      e.$.css("transform", "translate("+(e.box.position.x - e.w / 2)+"px, "+(e.box.position.y - e.h / 2)+"px) rotate(" + (e.box.angle / Math.PI * 180) + "deg)");
+      e.$.css("transform", "translate(" + (e.box.position.x - e.w / 2) + "px, " + (e.box.position.y - e.h / 2) + "px) rotate(" + (e.box.angle / Math.PI * 180) + "deg)");
     }
     requestAnimationFrame(frame);
   }
@@ -192,19 +192,19 @@ if((<any>window).gravity_dlc_already_active){
       frame(0);
     }
   })
-  
+
   function getComputedStyles(element: HTMLElement): { [key: string]: string } {
     const computedStyles = window.getComputedStyle(element);
     const inlineStyles: { [key: string]: string } = {};
-  
+
     for (let i = 0; i < computedStyles.length; i++) {
       const key = computedStyles[i];
       inlineStyles[key] = computedStyles.getPropertyValue(key);
     }
-  
+
     return inlineStyles;
   }
-  
+
   function applyInlineStyles(element: HTMLElement, styles: { [key: string]: string }): void {
     for (const key in styles) {
       if (styles.hasOwnProperty(key)) {
@@ -212,7 +212,7 @@ if((<any>window).gravity_dlc_already_active){
       }
     }
   }
-  
+
   function moveElementWithStyles(element: HTMLElement, newParentSelector: HTMLElement): void {
     if (!element) {
       return;
@@ -225,7 +225,7 @@ if((<any>window).gravity_dlc_already_active){
   function lcomb(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number) {
     return { a: (x3 * y2 - x2 * y3) / (x1 * y2 - x2 * y1), b: (x3 * y1 - x1 * y3) / (x2 * y1 - x1 * y2) };
   }
-  
+
   $(document.head).append(`<style>*{
     -webkit-user-drag: none !important; /* For WebKit browsers */
     user-drag: none; /* For other browsers that support this */
