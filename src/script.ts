@@ -37,9 +37,6 @@ if ((<any>window).gravity_dlc_already_active) {
 
   function visible(e: JQuery<HTMLElement>): number {
     if (((e.css("background-color") != "rgba(0, 0, 0, 0)" && e.css("background-color") != "") || (e.css("background-image") != "" && e.css("background-image") != "none") || hasDirectText(e[0]) || e[0] instanceof HTMLImageElement || e[0] instanceof SVGElement) && e[0].checkVisibility() && e.css("visibility") != "hidden") {
-      if (hasDirectText(e[0])) {
-        console.log(e.text(), e[0])
-      }
       return 1;
     }
     for (let i = 0; i < e.children().length; i++) {
@@ -229,14 +226,35 @@ if ((<any>window).gravity_dlc_already_active) {
       return;
     }
     const computedStyles = getComputedStyles(element);
-    const parent=$(element).parent();
-    const replacement=$(element.outerHTML)
+    const width=element.getBoundingClientRect().width;
+    const height=element.getBoundingClientRect().height;
+    const replacement=$(element.outerHTML);
+    clearIndices(replacement)
     replacement.css("visibility","hidden")
     replacement.insertAfter($(element))
     const $element = $(element).detach();
     applyInlineStyles(element, computedStyles);
+    $(element).css("width",width)
+    $(element).css("height",height)
     $(newParentSelector).append($element);
+    $element.on("click change input keydown",(e)=>{
+      e.stopImmediatePropagation();
+      replacement[0].click()
+    })
   }
+  
+  function clearIndices(element:JQuery<HTMLElement>){
+    if(element[0].id){
+      const computedStyles = getComputedStyles(element[0]);
+      applyInlineStyles(element[0], computedStyles);
+    }
+    element[0].id="";
+    for (let i = 0; i < element.children().length; i++) {
+      const e = element.children()[i];
+      clearIndices($(e))
+    }
+  }
+
   function lcomb(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number) {
     return { a: (x3 * y2 - x2 * y3) / (x1 * y2 - x2 * y1), b: (x3 * y1 - x1 * y3) / (x2 * y1 - x1 * y2) };
   }
