@@ -61,7 +61,7 @@ if ((<any>window).gravity_dlc_already_active) {
     e.h = e.$.outerHeight(false)!;
     e.ax = pos(e.$).left;
     e.ay = pos(e.$).top;
-    if ((hasDirectText($e[0]) || ($e.css("border-radius") != "0px" && $e.css("border-radius") != "" && v == 1) || $e[0] instanceof SVGElement || $e[0] instanceof HTMLImageElement || ($e.css("background-image") != "" && $e.css("background-image") != "none" && $e.css("width") != "")) && e.w < window.innerWidth * 0.8 && e.h < window.innerHeight * 0.8 && e.ax < window.innerWidth && e.ay < innerHeight && e.ax + e.w > 0 && e.ay + e.h > 0) {
+    if ((hasDirectText($e[0]) || ($e.css("border-radius") != "0px" && $e.css("border-radius") != "" && v == 1) || $e[0] instanceof SVGElement || $e[0] instanceof HTMLImageElement || ($e.css("background-image") != "" && $e.css("background-image") != "none" && $e.css("width") != "")) && e.w < window.innerWidth * 0.6 && e.h < window.innerHeight * 0.8 && e.ax < window.innerWidth && e.ay < innerHeight && e.ax + e.w > 0 && e.ay + e.h > 0) {
       e.md = false;
       e.ma = 0;
       e.mb = 0;
@@ -80,11 +80,11 @@ if ((<any>window).gravity_dlc_already_active) {
     let h = e.offsetParent();
     let h3 = e.position();
     let h4;
-    if (inner) {
+    // if (inner) {
       h4 = { left: parseFloat(e.css("margin-left")), top: parseFloat(e.css("margin-top")) };
-    } else {
-      h4 = { left: 0, top: 0 };
-    }
+    // } else {
+    //   h4 = { left: 0, top: 0 };
+    // }
     if (h3 == undefined) {
       return { left: 0, top: 0 };
     }
@@ -104,8 +104,13 @@ if ((<any>window).gravity_dlc_already_active) {
     e.$.css("object-position", "0% 0%");
     e.$.css("perceptive-origin", "0px 0px");
     e.$.css("transform", "translate(" + e.ax + "px, " + e.ay + "px)");
+    e.$.css("transform-origin", "center");
+    e.$.css("margin", "0px");
     e.$.css("left", "0px");
     e.$.css("top", "0px");
+    e.$.css("z-index", "1000");
+    e.$.css("right", "unset");
+    e.$.css("bottom", "unset");
     e.$.css("transition", "transform 0s");
     if (e.ax == undefined || e.ay == undefined || e.w == undefined || e.h == undefined) continue;
     e.box = Bodies.rectangle(e.ax + e.w / 2, e.ay + e.h / 2, e.w, e.h);
@@ -137,6 +142,12 @@ if ((<any>window).gravity_dlc_already_active) {
       // e.box.frictionAir=0;
     })
   }
+
+  $(document.body).css("width",window.innerWidth+"px");
+  $(document.body).css("height",window.innerHeight+"px");
+  $(document.body).css("margin","0px");
+  $(document.body).css("left","0px");
+  $(document.body).css("top","0px");
 
   let mx = 0;
   let my = 0;
@@ -218,6 +229,10 @@ if ((<any>window).gravity_dlc_already_active) {
       return;
     }
     const computedStyles = getComputedStyles(element);
+    const parent=$(element).parent();
+    const replacement=$(element.outerHTML)
+    replacement.css("visibility","hidden")
+    replacement.insertAfter($(element))
     const $element = $(element).detach();
     applyInlineStyles(element, computedStyles);
     $(newParentSelector).append($element);

@@ -10807,7 +10807,7 @@
           e.h = e.$.outerHeight(false);
           e.ax = pos(e.$).left;
           e.ay = pos(e.$).top;
-          if ((hasDirectText($e[0]) || $e.css("border-radius") != "0px" && $e.css("border-radius") != "" && v == 1 || $e[0] instanceof SVGElement || $e[0] instanceof HTMLImageElement || $e.css("background-image") != "" && $e.css("background-image") != "none" && $e.css("width") != "") && e.w < window.innerWidth * 0.8 && e.h < window.innerHeight * 0.8 && e.ax < window.innerWidth && e.ay < innerHeight && e.ax + e.w > 0 && e.ay + e.h > 0) {
+          if ((hasDirectText($e[0]) || $e.css("border-radius") != "0px" && $e.css("border-radius") != "" && v == 1 || $e[0] instanceof SVGElement || $e[0] instanceof HTMLImageElement || $e.css("background-image") != "" && $e.css("background-image") != "none" && $e.css("width") != "") && e.w < window.innerWidth * 0.6 && e.h < window.innerHeight * 0.8 && e.ax < window.innerWidth && e.ay < innerHeight && e.ax + e.w > 0 && e.ay + e.h > 0) {
             e.md = false;
             e.ma = 0;
             e.mb = 0;
@@ -10823,11 +10823,7 @@
           let h = e.offsetParent();
           let h3 = e.position();
           let h4;
-          if (inner) {
-            h4 = { left: parseFloat(e.css("margin-left")), top: parseFloat(e.css("margin-top")) };
-          } else {
-            h4 = { left: 0, top: 0 };
-          }
+          h4 = { left: parseFloat(e.css("margin-left")), top: parseFloat(e.css("margin-top")) };
           if (h3 == void 0) {
             return { left: 0, top: 0 };
           }
@@ -10856,6 +10852,10 @@
             return;
           }
           const computedStyles = getComputedStyles(element);
+          const parent = jquery_module_default(element).parent();
+          const replacement = jquery_module_default(element.outerHTML);
+          replacement.css("visibility", "hidden");
+          replacement.insertAfter(jquery_module_default(element));
           const $element = jquery_module_default(element).detach();
           applyInlineStyles(element, computedStyles);
           jquery_module_default(newParentSelector).append($element);
@@ -10877,8 +10877,13 @@
           e.$.css("object-position", "0% 0%");
           e.$.css("perceptive-origin", "0px 0px");
           e.$.css("transform", "translate(" + e.ax + "px, " + e.ay + "px)");
+          e.$.css("transform-origin", "center");
+          e.$.css("margin", "0px");
           e.$.css("left", "0px");
           e.$.css("top", "0px");
+          e.$.css("z-index", "1000");
+          e.$.css("right", "unset");
+          e.$.css("bottom", "unset");
           e.$.css("transition", "transform 0s");
           if (e.ax == void 0 || e.ay == void 0 || e.w == void 0 || e.h == void 0) continue;
           e.box = Bodies.rectangle(e.ax + e.w / 2, e.ay + e.h / 2, e.w, e.h);
@@ -10901,6 +10906,11 @@
             if (e.box == void 0) return;
           });
         }
+        jquery_module_default(document.body).css("width", window.innerWidth + "px");
+        jquery_module_default(document.body).css("height", window.innerHeight + "px");
+        jquery_module_default(document.body).css("margin", "0px");
+        jquery_module_default(document.body).css("left", "0px");
+        jquery_module_default(document.body).css("top", "0px");
         let mx = 0;
         let my = 0;
         jquery_module_default(document).on("click", () => {
