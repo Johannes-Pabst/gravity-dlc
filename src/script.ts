@@ -237,9 +237,14 @@ if ((<any>window).gravity_dlc_already_active) {
     $(element).css("width",width)
     $(element).css("height",height)
     $(newParentSelector).append($element);
-    $element.on("click change input keydown",(e)=>{
-      e.stopImmediatePropagation();
-      replacement[0].click()
+    $element.on("click",(e)=>{
+      e.stopPropagation();
+      console.log(replacement[0])
+      replacement[0].click();
+    })
+    $element.on("change",(e)=>{
+      e.stopPropagation();
+      replacement[0].dispatchEvent(e.originalEvent!)
     })
   }
   
@@ -262,7 +267,7 @@ if ((<any>window).gravity_dlc_already_active) {
   $(document.head).append(`<style>*{
     -webkit-user-drag: none !important; /* For WebKit browsers */
     user-drag: none; /* For other browsers that support this */
-    overflow: hidden;
+    overflow: hidden !important;
     user-select: none;
   }</style>`)
 }

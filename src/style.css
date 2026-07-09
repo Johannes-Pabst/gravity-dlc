@@ -1,6 +1,0 @@
-*{
-  -webkit-user-drag: none; /* For WebKit browsers */
-  user-drag: none; /* For other browsers that support this */
-  overflow: hidden;
-  user-select: none;
-}
